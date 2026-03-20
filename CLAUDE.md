@@ -52,3 +52,19 @@ DayZ server mission and loot economy configuration for Chernarus+ (offline/local
 ## Scripting Language
 
 Files use **Enforce Script** (`.c` files) — DayZ's C-like scripting language. Not standard C/C++. Class-based with `override`, `ref`, `autoptr`, and engine-specific APIs (`GetGame()`, `EntityAI`, `PlayerBase`, etc.).
+
+## Project Goal
+
+Replacing the vanilla Central Economy loot spawning system with a custom scripted solution. See `docs/CE-Replacement-Research.md` for full research, API reference, and implementation strategy.
+
+## Key Script Files for CE Work
+
+- **`scripts/3_game/ce/centraleconomy.c`** — CEApi class (spawn, lifetime, avoidance methods) + ECE/RF flag constants
+- **`scripts/3_game/hive/hive.c`** — Hive class (persistence init, character save/load)
+- **`scripts/4_world/entities/itembase.c`** — ItemBase with EEOnCECreate hook
+- **`scripts/5_mission/mission/missionserver.c`** — MissionServer entry point
+- **`scripts/config.cpp`** — Full game class hierarchy (64 KB)
+
+## External Data
+
+Full game data extraction at `C:\Users\Drifter\Documents\DayZ Projects\` — contains non-CE assets (models, textures, sounds, animations). All CE-relevant files are already in this repo.

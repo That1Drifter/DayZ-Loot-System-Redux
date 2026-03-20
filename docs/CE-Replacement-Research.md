@@ -35,6 +35,11 @@
   - [Strategy 4: Direct Object Spawning (Bypass CE Entirely)](#strategy-4-direct-object-spawning)
 - [Recommended Approach](#recommended-approach)
 - [Existing Modding Precedent](#existing-modding-precedent)
+- [Repository Data Inventory](#repository-data-inventory)
+  - [Data Coverage](#data-coverage)
+  - [Active Mission (`dayzOffline.chernarusplus/`)](#active-mission-dayzofflinechernarusplus)
+  - [Reference Data (`extracted-game-data/`)](#reference-data-extracted-game-data)
+  - [External Data Source](#external-data-source)
 
 ---
 
@@ -687,3 +692,69 @@ No widely-known mod completely replaces the CE loot system. The closest examples
 - **Community Framework** — Provides `MissionServer` extensions and utility classes useful for custom systems
 
 All of these work alongside the CE rather than replacing it, which validates the hybrid approach — the CE's persistence and cleanup infrastructure is valuable enough that even major mods keep it running.
+
+---
+
+## Repository Data Inventory
+
+### Data Coverage
+
+The repo contains complete CE data for all three DayZ maps. Cross-referenced against a full game data extraction (`C:\Users\Drifter\Documents\DayZ Projects\`) — all substantive CE files are present and match.
+
+### Active Mission (`dayzOffline.chernarusplus/`)
+
+The working mission folder for Chernarus+. This is where modifications are made.
+
+| File | Size | Description |
+|------|------|-------------|
+| `db/types.xml` | 838 KB | Master item definitions (~1,200+ item types) |
+| `db/economy.xml` | 509 B | CE subsystem enable/disable flags |
+| `db/events.xml` | 51 KB | Dynamic event definitions (animals, vehicles, crashes) |
+| `db/globals.xml` | 1.8 KB | 31 global economy variables |
+| `db/messages.xml` | 1.3 KB | Server messages configuration |
+| `cfgeconomycore.xml` | 1.9 KB | Root classes and CE defaults |
+| `cfgenvironment.xml` | 4.2 KB | Animal territory assignments |
+| `cfgeventgroups.xml` | 119 KB | Event groups with positioned entities (train wrecks, containers) |
+| `cfgeventspawns.xml` | 81 KB | Vehicle spawn coordinates across the map |
+| `cfggameplay.json` | — | Gameplay parameter overrides |
+| `cfgignorelist.xml` | 770 B | 15 items excluded from CE |
+| `cfglimitsdefinition.xml` | 1.3 KB | Categories, tags, usage flags, value tiers |
+| `cfglimitsdefinitionuser.xml` | 1.4 KB | User-defined limits extensions |
+| `cfgplayerspawnpoints.xml` | 13 KB | Player spawn locations |
+| `cfgrandompresets.xml` | 34 KB | Random loot presets (foodHermit, foodVillage, foodCity, foodArmy, etc.) |
+| `cfgspawnabletypes.xml` | 122 KB | Item attachment/cargo randomization + hoarder definitions |
+| `cfgweather.xml` | 4.7 KB | Weather cycle config (currently disabled) |
+| `cfgeffectarea.json` | — | Contaminated zone definitions with 57 safe spawn positions |
+| `areaflags.map` | 81 MB | Binary tier zone bitmap |
+| `mapgroupcluster.xml` | 4.6 MB | Building-to-spawn-point mapping (main) |
+| `mapgroupcluster01-04.xml` | 1.6-4.6 MB | Regional cluster divisions |
+| `mapgrouppos.xml` | 1.5 MB | All spawn position data |
+| `mapgroupproto.xml` | 1.2 MB | Building prototype group definitions |
+| `mapclusterproto.xml` | 35 KB | Cluster prototype definitions |
+| `env/*.xml` | — | 13 animal/zombie territory files |
+| `init.c` | 2.8 KB | Mission entry point |
+
+### Reference Data (`extracted-game-data/`)
+
+Vanilla (unmodified) game data for comparison. Contains complete CE configs for all three maps plus the full script source.
+
+**Maps included:**
+- `dayzOffline.chernarusplus/` — same structure as active mission
+- `dayzOffline.enoch/` — Livonia (Enoch) map CE data
+- `dayzOffline.sakhal/` — Sakhal map CE data (includes unique `reindeer_territories.xml`)
+
+**Scripts included** (`extracted-game-data/scripts/`):
+- `1_core/` — Engine prototypes (proto native declarations)
+- `2_gamelib/` — Utilities, timers, call queues
+- `3_game/ce/centraleconomy.c` — **CEApi class** (769 lines, 31 KB)
+- `3_game/hive/hive.c` — **Hive class** (31 lines)
+- `3_game/entities/entityai.c` — EntityAI base class with EEOnCECreate
+- `4_world/entities/itembase.c` — ItemBase with CE quantity/damage hooks
+- `4_world/entities/vehicles/carscript.c` — Vehicle CE hooks
+- `5_mission/mission/missionserver.c` — MissionServer entry point
+- `config.cpp` (64 KB) — Full game class hierarchy (CfgVehicles, CfgAmmo, etc.)
+- `staticdefinesdoc.c` (8.4 KB) — Engine static defines documentation
+
+### External Data Source
+
+Full game data extraction is available at `C:\Users\Drifter\Documents\DayZ Projects\` and includes additional non-CE assets (models, textures, sounds, animations) not needed in this repo. All CE-relevant files have been verified as present and matching in the repo.
